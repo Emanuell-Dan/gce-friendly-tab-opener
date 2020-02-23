@@ -1,0 +1,20 @@
+{
+  "name": "Friendly Tab Opener",
+	"description": "Simple Chrome Extension which helps you save time by opening multiple saved URLs at once. The extension also comes with functionality to allow creation of custom lists.",
+  "version": "0.0.1",
+	"manifest_version": 2,
+	"icons": { 
+		"16": "rocket16.png",
+		"32": "rocket32.png",
+		"48": "rocket48.png",
+		"128": "rocket128.png" 
+	},
+	"browser_action": {
+		"default_title": "Let's save some clicks!",
+		"default_icon": "rocket16.png",
+		"default_popup": "index.html"
+	},
+	"permissions": [
+		"tabs"
+	]
+}
