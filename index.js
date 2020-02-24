@@ -1,47 +1,48 @@
 document.addEventListener('DOMContentLoaded', init);
 
-let cacheKey = 'open-mul-url-cache';
-let clearList = document.querySelector('.reset');
-let urls = document.getElementsByTagName('input');
-let addNewUrl = document.querySelector('.url__new');
-let txtArea = document.getElementById('urls');
+let cachedUrlsLocalStorageKey = 'cached-urls';
+let urlsList = document.getElementsByTagName('input');
+
+let textArea = document.getElementById('urls');
 
 function init() {
-  // read cached opts
-  let cachedUrls = getCachedOpts();
-  txtArea.value = cachedUrls.txt;
-
-	clearList.addEventListener('click', clearCachedUrls);
-  document.querySelector('.cta__open').addEventListener('click', openWebsites);
-
-  // Cache URL on state change
-	txtArea.addEventListener('change', (e) => recordOpts({ txt: e.target.value }));
-	
-	newURL();
-}
-
-// Add another URL
-function newURL() {
 	constructUrlMarkup();
+
+  // Retrieve cached urls
+  const retrieveCachedUrls = getCachedUrls();
+	textArea.value = retrieveCachedUrls.list;
+	
+	document.querySelector('.url-new').addEventListener('click', newUrl);
+	document.querySelector('.reset').addEventListener('click', clearCachedUrls);
+  document.querySelector('.cta-open').addEventListener('click', openWebsites);
 }
 
-function constructUrlMarkup() {
+// Cache current url & construct new one
+function newUrl() {
+	recordUrl();
+
+	constructUrlMarkup(2);
+}
+
+// Construct new url
+function constructUrlMarkup(id = 1) {
 	const urlItem = document.createElement('li');
-	urlItem.setAttribute('class', 'url__item');
+	urlItem.setAttribute('class', 'url-item');
 
 	const urlLabel = document.createElement('label');
-	urlLabel.setAttribute('for', 'fname');
+	urlLabel.setAttribute('for', `url-${id}`);
+	urlLabel.innerText = 'Paste your url:';
 
 	const urlInput = document.createElement('input');
 	urlInput.setAttribute('type', 'text');
-	urlInput.setAttribute('id', 'fname');
-	urlInput.setAttribute('name', 'fname');
+	urlInput.setAttribute('id', `url-${id}`);
+	urlInput.setAttribute('name', `url-${id}`);
 
 	const urlButton = document.createElement('button');
 	urlButton.setAttribute('type', 'button');
-	urlButton.setAttribute('button', 'url__button');
+	urlButton.setAttribute('class', 'url-new');
 
-	const urlList = document.querySelector('.url__list');
+	const urlList = document.querySelector('.url-list');
 	urlList.appendChild(urlItem);
 
 	urlItem.appendChild(urlLabel);
@@ -49,28 +50,27 @@ function constructUrlMarkup() {
 	urlItem.appendChild(urlButton);
 }
 
-// record options into localStorage
-function recordOpts(newOpt) {
-  let oldOpt = getCachedOpts();
+// Store urls in localStorage
+function recordUrl() {
   localStorage.setItem(
-    cacheKey,
-    JSON.stringify(Object.assign({}, oldOpt, newOpt))
+    cachedUrlsLocalStorageKey,
+    JSON.stringify(Object.assign({}, getCachedUrls(), { list: [...urls].map(url => url.value )}))
   );
 }
 
-// URLs saved in localStorage
-function getCachedOpts() {
-	let cache = localStorage.getItem(cacheKey);
+// Retrieve urls saved in localStorage
+function getCachedUrls() {
+	let cache = localStorage.getItem(cachedUrlsLocalStorageKey);
 	
-	return cache ? JSON.parse(cache) : { txt: '' };
+	return cache ? JSON.parse(cache) : { list: '' };
 }
 
-// Clears cached URLs
+// Clear cached URLs
 function clearCachedUrls() {
-	return txtArea.value = '';
+	return textArea.value = '';
 }
 
-// Opens websites
+// Open websites
 function openWebsites(e) {
-	[...urls].map(el => chrome.tabs.create({ url: el.value, active: false }));
+	[...urlsList].map(url => chrome.tabs.create({ url: url.value, active: false }));
 }

@@ -1,6 +1,7 @@
 {
   "name": "Friendly Tab Opener",
 	"description": "Simple Chrome Extension which helps you save time by opening multiple saved URLs at once. The extension also comes with functionality to allow creation of custom lists.",
+	"homepage_url" : "https://github.com/Emanuell-Dan/gce-friendly-tab-opener",
   "version": "0.0.1",
 	"manifest_version": 2,
 	"icons": { 

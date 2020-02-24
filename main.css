@@ -1,0 +1,17 @@
+textarea {
+	overflow: auto;
+	resize: none;
+	white-space: pre;
+}
+
+.url-list {
+	list-style-type: none;
+	padding: 0;
+}
+
+.url-new {
+	background: url("./plus.svg") no-repeat center;
+	border: none;
+	height: 10px;
+	width: 10px;
+}
